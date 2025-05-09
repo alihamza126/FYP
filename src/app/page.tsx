@@ -3,7 +3,6 @@
 import React from 'react'
 import TopNavThree from '@/components/Header/TopNav/TopNavThree'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
-import SliderThree from '@/components/Slider/SliderThree'
 import BannerTop from '@/components/Home1/BannerTop'
 import TrendingProduct from '@/components/Home1/TrendingProduct'
 import productData from '@/data/Product.json'
@@ -16,7 +15,6 @@ import TrendingNow from '@/components/Home1/TrendingNow'
 import testimonialData from '@/data/Testimonial.json'
 import Testimonial from '@/components/Home1/Testimonial'
 import Deal from '@/components/Home1/Deal'
-import SliderTwo from '@/components/Slider/SliderTwo'
 import SliderOne from '@/components/Slider/SliderOne'
 
 
@@ -39,7 +37,7 @@ export default function Home() {
             <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-3xl" />
             <Brand />
             <Footer />
-            <ModalNewsletter />
+            {/* <ModalNewsletter /> */}
         </>
     )
 }

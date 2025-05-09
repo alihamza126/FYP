@@ -44,44 +44,6 @@ const TopNavThree: React.FC<Props> = ({ props }) => {
                             </ul>
                         </div>
                         <div className="right-content flex items-center gap-5 max-md:hidden">
-                            <div
-                                className="choose-type choose-language flex items-center gap-1.5"
-                                onClick={() => {
-                                    setIsOpenLanguage(!isOpenLanguage)
-                                    setIsOpenCurrence(false)
-                                }}
-                            >
-                                <div className="select relative">
-                                    <p className="selected caption2">{language}</p>
-                                    <ul className={`list-option bg-white ${isOpenLanguage ? 'open' : ''}`}>
-                                        {
-                                            ['English', 'Espana', 'France'].map((item, index) => (
-                                                <li key={index} className="caption2" onClick={() => setLanguage(item)}>{item}</li>
-                                            ))
-                                        }
-                                    </ul>
-                                </div>
-                                <Icon.CaretDown size={12} />
-                            </div>
-                            <div
-                                className="choose-type choose-currency flex items-center gap-1.5"
-                                onClick={() => {
-                                    setIsOpenCurrence(!isOpenCurrence)
-                                    setIsOpenLanguage(false)
-                                }}
-                            >
-                                <div className="select relative">
-                                    <p className="selected caption2">{currence}</p>
-                                    <ul className={`list-option bg-white ${isOpenCurrence ? 'open' : ''}`}>
-                                        {
-                                            ['USD', 'EUR', 'GBP'].map((item, index) => (
-                                                <li key={index} className="caption2" onClick={() => setCurrence(item)}>{item}</li>
-                                            ))
-                                        }
-                                    </ul>
-                                </div>
-                                <Icon.CaretDown size={12} />
-                            </div>
                             <Link href={'https://www.facebook.com/'} target='_blank'>
                                 <i className="icon-facebook text-black"></i>
                             </Link>
@@ -91,14 +53,7 @@ const TopNavThree: React.FC<Props> = ({ props }) => {
                             <Link href={'https://www.youtube.com/'} target='_blank'>
                                 <i className="icon-youtube text-black"></i>
                             </Link>
-                            <Link href={'https://twitter.com/'} target='_blank'>
-                                <i className="icon-twitter text-black"></i>
-                            </Link>
-                            <Link href={'https://pinterest.com/'} target='_blank'>
-                                <i className="icon-pinterest text-black"></i>
-                            </Link>
                         </div>
-
                     </div>
                 </div>
             </div>

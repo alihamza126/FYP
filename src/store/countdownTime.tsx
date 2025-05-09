@@ -1,5 +1,5 @@
 export const countdownTime = () => {
-    const targetDate: Date = new Date('2024-07-28');
+    const targetDate: Date = new Date(Date.now() + 24 * 60 * 60 * 1000);
     const currentDate: Date = new Date();
     const difference: number = targetDate.getTime() - currentDate.getTime();
 
