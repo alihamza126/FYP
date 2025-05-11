@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Instrument_Sans } from 'next/font/google'
 import '@/styles/styles.scss'
+import './global.css'
 import GlobalProvider from './GlobalProvider'
 import ModalCart from '@/components/Modal/ModalCart'
 import ModalWishlist from '@/components/Modal/ModalWishlist'
@@ -9,6 +10,7 @@ import ModalQuickview from '@/components/Modal/ModalQuickview'
 import ModalCompare from '@/components/Modal/ModalCompare'
 import CountdownTimeType from '@/type/CountdownType'
 import { countdownTime } from '@/store/countdownTime'
+import { Toaster } from 'react-hot-toast'
 
 const serverTimeLeft: CountdownTimeType = countdownTime();
 
@@ -27,6 +29,7 @@ export default function RootLayout({
   return (
     <GlobalProvider>
       <html lang="en">
+        <Toaster/>
         <body className={instrument.className}>
           {children}
           <ModalCart serverTimeLeft={serverTimeLeft} />

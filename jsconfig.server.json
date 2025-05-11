@@ -1,0 +1,15 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      "module": "ESNext",
+      "target": "ES2017",
+      "outDir": "./dist",
+      "moduleResolution": "node",
+      "strict": true,
+      "noEmit": false,
+      "isolatedModules": false,
+      "resolveJsonModule": true, // Allow importing JSON files
+      "esModuleInterop": true    // Enable ES module interop
+    },
+    "include": ["server.js"] // Include JSON file
+  }

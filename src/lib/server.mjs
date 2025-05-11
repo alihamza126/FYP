@@ -3,13 +3,17 @@ import { parse } from 'url'
 import next from 'next'
 import express from 'express'
 import userRouter from './server/routes/users.js';
-// import errorHandler from './server/middleware/errorHandler.js';
+import { errorHandler } from './server/middleware/error.middleware.js';
 import mongoose from 'mongoose';
 
 import dotenv from "dotenv";
 dotenv.config({
   path: "./.env.local",
 }); // 👈 
+
+
+
+
 
 
 
@@ -49,7 +53,7 @@ app.prepare().then(() => {
   });
 
   // error handler middleware
-  // expressApp.use(errorHandler);
+  expressApp.use(errorHandler);
 
 
 

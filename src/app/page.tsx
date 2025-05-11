@@ -10,7 +10,6 @@ import Benefit from '@/components/Home1/Benefit'
 import FlashSale from '@/components/Home1/FlashSale'
 import Brand from '@/components/Home1/Brand'
 import Footer from '@/components/Footer/Footer'
-import ModalNewsletter from '@/components/Modal/ModalNewsletter'
 import TrendingNow from '@/components/Home1/TrendingNow'
 import testimonialData from '@/data/Testimonial.json'
 import Testimonial from '@/components/Home1/Testimonial'
@@ -37,7 +36,6 @@ export default function Home() {
             <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-3xl" />
             <Brand />
             <Footer />
-            {/* <ModalNewsletter /> */}
         </>
     )
 }
