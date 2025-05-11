@@ -11,6 +11,7 @@ import ModalCompare from '@/components/Modal/ModalCompare'
 import CountdownTimeType from '@/type/CountdownType'
 import { countdownTime } from '@/store/countdownTime'
 import { Toaster } from 'react-hot-toast'
+import { HeroUIProvider } from "@heroui/react";
 
 const serverTimeLeft: CountdownTimeType = countdownTime();
 
@@ -29,15 +30,17 @@ export default function RootLayout({
   return (
     <GlobalProvider>
       <html lang="en">
-        <Toaster/>
-        <body className={instrument.className}>
-          {children}
-          <ModalCart serverTimeLeft={serverTimeLeft} />
-          <ModalWishlist />
-          <ModalSearch />
-          <ModalQuickview />
-          <ModalCompare />
-        </body>
+        <HeroUIProvider>
+          <Toaster />
+          <body className={instrument.className}>
+            {children}
+            <ModalCart serverTimeLeft={serverTimeLeft} />
+            <ModalWishlist />
+            <ModalSearch />
+            <ModalQuickview />
+            <ModalCompare />
+          </body>
+        </HeroUIProvider>
       </html>
     </GlobalProvider>
   )

@@ -5,15 +5,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import TopNavOne from '@/components/Header/TopNav/TopNavOne'
 import MenuOne from '@/components/Header/Menu/MenuOne'
-import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
 import Footer from '@/components/Footer/Footer'
 import Input from '@/shared/Input/Input'
-import ButtonPrimary from '@/shared/Button/ButtonPrimary'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
 import { Eye, EyeOff } from 'lucide-react'
-import { resetPasswordSchema, ResetFormData } from '@/lib/validatoins'
+import { Button } from '@heroui/button'
 
 export default function ResetPasswordPage() {
     const router = useRouter()
@@ -29,8 +26,11 @@ export default function ResetPasswordPage() {
         handleSubmit,
         watch,
         formState: { errors }
-    } = useForm<ResetFormData>({
-        resolver: zodResolver(resetPasswordSchema)
+    } = useForm({
+        defaultValues: {
+            password: '',
+            confirmPassword: ''
+        }
     })
 
     const passwordValue = watch('password', '')
@@ -71,7 +71,7 @@ export default function ResetPasswordPage() {
             .finally(() => setIsVerifying(false))
     }, [router])
 
-    const onSubmit = async (data: ResetFormData) => {
+    const onSubmit = async (data:any) => {
         if (!token) return
         setIsSubmitting(true)
         const toastId = toast.loading('Resetting password...')
@@ -86,7 +86,7 @@ export default function ResetPasswordPage() {
                 throw new Error(body.error)
             }
             toast.success(body.message, { id: toastId })
-            setTimeout(() => router.replace('/signin'), 2000)
+            setTimeout(() => router.replace('/login'), 2000)
         } catch (err: any) {
             toast.error(err.message, { id: toastId })
         } finally {
@@ -172,12 +172,15 @@ export default function ResetPasswordPage() {
                             )}
                         </div>
 
-                        <ButtonPrimary
-                            loading={isSubmitting}
+                        <Button
+                            type="submit"
+                            isLoading={isSubmitting}
+                            color='primary'
+
                             className="w-full py-3"
                         >
                             Reset Password
-                        </ButtonPrimary>
+                        </Button>
                     </form>
 
                     <p className="mt-6 text-center text-secondary">
