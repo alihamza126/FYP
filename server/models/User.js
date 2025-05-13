@@ -12,7 +12,10 @@ const userSchema = new mongoose.Schema({
 		unique: true,
 	},
 	password: String,
-	image: String,
+	image:{
+		type: String,
+		default: null
+	},
 	provider: String,
 	providerId: String,
 
@@ -30,7 +33,18 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		default: 'user'
 	},
-	
+
+	firstName: { type: String, default: null },
+	lastName: { type: String, default: null },
+	phone: { type: String, default: null },
+	gender: {
+		type: String,
+		enum: ['male', 'female'], 
+		default: 'male',
+	},
+	dob: { type: Date, default: null, required: false },
+
+
 	forgotPasswordToken: String,
 	forgotPasswordTokenExpiry: Date,
 	verifyToken: String,

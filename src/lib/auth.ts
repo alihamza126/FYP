@@ -48,7 +48,8 @@ const authOptions: AuthOptions = {
 				// Return user object without password
 				return {
 					id: user._id.toString(),
-					name: user.name,
+					name: user.username,
+					role: user.role,
 					email: user.email,
 					image: user.image,
 				}
@@ -100,8 +101,12 @@ const authOptions: AuthOptions = {
 		async session({ session, token }) {
 			if (session.user) {
 				session.user.id = token.id as string
-				session.user.isProfileComplete = token.isProfileComplete as boolean
 				session.user.provider = token.provider as string
+				session.user.email = token.email as string
+				session.user.name = token.name as string
+				session.user.image = token.image as string
+				session.user.role = token.role as string
+				session.accessToken = token.sub
 			}
 			return session
 		},
@@ -109,6 +114,11 @@ const authOptions: AuthOptions = {
 			if (user) {
 				token.id = user.id
 				token.provider = account?.provider
+				token.accessToken = account?.access_token
+				token.email = user.email
+				token.name = user.name
+				token.image = user.image
+				token.role = user.role
 
 				// Fetch additional user data for credentials login
 				if (account?.provider === 'credentials') {
@@ -130,7 +140,7 @@ const authOptions: AuthOptions = {
 			else if (new URL(url).origin === baseUrl) return url
 			return baseUrl
 		}
-	},
+	},	
 	pages: {
 		signIn: '/login',
 		error: '/error',

@@ -4,6 +4,7 @@ import UserModel from '../models/User.js';
 import bcrypt from "bcryptjs";
 import { registerSchema } from '../validators/users.validation.js';
 import { sendEmail } from '../helpers/mailer.js';
+import { authenticateJWT } from '../middleware/JwtAthenticate.js';
 const userRouter = express.Router();
 
 
@@ -57,7 +58,6 @@ userRouter.post("/register", asyncWrapper(async (req, res) => {
     })
 }));
 
-
 userRouter.post("/verifyemail", asyncWrapper(async (req, res) => {
     const { token } = req.body;
     console.log(token);
@@ -78,8 +78,6 @@ userRouter.post("/verifyemail", asyncWrapper(async (req, res) => {
         success: true
     })
 }));
-
-
 
 //forgot password
 userRouter.post("/forgotpassword", asyncWrapper(async (req, res) => {
@@ -156,6 +154,21 @@ userRouter.post('/resetpassword', asyncWrapper(async (req, res) => {
 })
 )
 
+// authenticateJWT,
+userRouter.patch('/update/:id', asyncWrapper(async (req, res) => {
+    const { id } = req.params
+    const updatedUser = await UserModel.findByIdAndUpdate(id, req.body, { new: true })
+    res.status(200).json({ updatedUser, success: true });
+}));
+
+
+// ---------get user profile  ----- 
+
+userRouter.get('/me/:id', asyncWrapper(async (req, res) => {
+    const { id } = req.params
+    const user = await UserModel.findById(id)
+    res.status(200).json({ user, success: true });
+}));
 
 
 

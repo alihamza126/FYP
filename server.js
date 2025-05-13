@@ -7,6 +7,8 @@ import userRouter from './server/routes/users.js';
 import mongoose from 'mongoose';
 
 import dotenv from "dotenv";
+import addressRouter from './server/routes/address.js';
+import cookieParser from 'cookie-parser';
 dotenv.config({
   path: "./.env.local",
 }); // 👈 
@@ -18,6 +20,7 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handler = app.getRequestHandler()
 const expressApp = express();
+
 
 
 const connectMongoDB = async () => {
@@ -35,9 +38,11 @@ connectMongoDB();
 
 app.prepare().then(() => {
   expressApp.use(express.json());
+  expressApp.use(cookieParser())
 
   //routes start from here
   expressApp.use("/api/v1/users", userRouter);
+  expressApp.use("/api/v1/address", addressRouter);
 
 
 
