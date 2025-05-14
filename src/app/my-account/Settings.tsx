@@ -20,7 +20,7 @@ interface SettingsProps {
 }
 
 interface FormValues {
-    avatar: string | null
+    image: string | null
     firstName: string
     lastName: string
     phone: string
@@ -40,7 +40,7 @@ export default function Settings({ image, firstName, lastName, phone, gender, do
         formState: { errors }
     } = useForm<FormValues>({
         defaultValues: {
-            avatar: image,
+            image: image,
             firstName,
             lastName,
             phone,
@@ -51,7 +51,7 @@ export default function Settings({ image, firstName, lastName, phone, gender, do
 
     // Keep form value in sync if props change
     useEffect(() => {
-        setValue('avatar', image)
+        setValue('image', image)
         setValue('firstName', firstName)
         setValue('lastName', lastName)
         setValue('phone', phone)
@@ -83,17 +83,17 @@ export default function Settings({ image, firstName, lastName, phone, gender, do
             <div className="heading5">Information</div>
 
             <div className="upload_image">
-                <label className="caption1">Upload Avatar <span className="text-red">*</span></label>
+                <label className="caption1">Upload image <span className="text-red">*</span></label>
                 <div className="flex items-center gap-5 mt-3">
                     <div className="w-28 h-28 rounded-lg bg-surface overflow-hidden relative">
                         <Controller
                             control={control}
-                            name="avatar"
+                            name="image"
                             render={({ field }) => (
                                 field.value ? (
                                     <Image
                                         src={field.value}
-                                        alt="avatar"
+                                        alt="image"
                                         fill
                                         className="object-cover"
                                     />
@@ -108,7 +108,7 @@ export default function Settings({ image, firstName, lastName, phone, gender, do
                     </div>
                     <Controller
                         control={control}
-                        name="avatar"
+                        name="image"
                         render={({ field }) => (
                             <CloudinaryUploader
                                 multiple={false}
@@ -120,7 +120,7 @@ export default function Settings({ image, firstName, lastName, phone, gender, do
                         )}
                     />
                 </div>
-                {errors.avatar && <p className="text-red-500 text-xs">Avatar is required</p>}
+                {errors.image && <p className="text-red-500 text-xs">image is required</p>}
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">

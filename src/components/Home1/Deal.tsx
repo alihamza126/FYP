@@ -14,7 +14,6 @@ interface Props {
 
 const Deal: React.FC<Props> = ({ data, start, limit }) => {
     const [timeLeft, setTimeLeft] = useState(countdownTime());
-
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft(countdownTime());

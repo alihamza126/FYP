@@ -9,6 +9,10 @@ import mongoose from 'mongoose';
 import dotenv from "dotenv";
 import addressRouter from './server/routes/address.js';
 import cookieParser from 'cookie-parser';
+import categoryRouter from './server/routes/category.js';
+import adminRouter from './server/routes/Admin.js';
+import productRouter from './server/routes/product.js';
+import sliderRouter from './server/routes/slider.js';
 dotenv.config({
   path: "./.env.local",
 }); // 👈 
@@ -42,7 +46,12 @@ app.prepare().then(() => {
 
   //routes start from here
   expressApp.use("/api/v1/users", userRouter);
+  expressApp.use("/api/v1/superadmin", adminRouter);
   expressApp.use("/api/v1/address", addressRouter);
+  expressApp.use("/api/v1/category", categoryRouter);
+  expressApp.use("/api/v1/product", productRouter);
+  expressApp.use("/api/v1/slider", sliderRouter);
+
 
 
 

@@ -15,9 +15,10 @@ interface Props {
     dataType: string | null | undefined
     gender: string | null
     category: string | null
+    pageCount: number
 }
 
-const ShopBreadCrumb1: React.FC<Props> = ({ data, productPerPage, dataType, gender, category }) => {
+const ShopBreadCrumb1: React.FC<Props> = ({ data,pageCount, productPerPage, dataType, gender, category }) => {
     const [showOnlySale, setShowOnlySale] = useState(false)
     const [sortOption, setSortOption] = useState('');
     const [type, setType] = useState<string | null | undefined>(dataType)
@@ -174,9 +175,6 @@ const ShopBreadCrumb1: React.FC<Props> = ({ data, productPerPage, dataType, gend
     }
 
 
-    // Find page number base on filteredData
-    const pageCount = Math.ceil(filteredData.length / productsPerPage);
-
     // If page number 0, set current page = 0
     if (pageCount === 0) {
         setCurrentPage(0);
@@ -191,9 +189,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({ data, productPerPage, dataType, gend
         currentProducts = []
     }
 
-    const handlePageChange = (selected: number) => {
-        setCurrentPage(selected);
-    };
+    
 
     const handleClearAll = () => {
         dataType = null
@@ -492,11 +488,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({ data, productPerPage, dataType, gend
                                 ))}
                             </div>
 
-                            {pageCount > 1 && (
-                                <div className="list-pagination flex items-center md:mt-10 mt-7">
-                                    <HandlePagination pageCount={pageCount} onPageChange={handlePageChange} />
-                                </div>
-                            )}
+                            
                         </div>
                     </div>
                 </div>

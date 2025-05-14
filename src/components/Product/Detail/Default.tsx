@@ -22,11 +22,11 @@ import ModalSizeguide from '@/components/Modal/ModalSizeguide'
 SwiperCore.use([Navigation, Thumbs]);
 
 interface Props {
-    data: Array<ProductType>
+    productMain: any
     productId: string | number | null
 }
 
-const Default: React.FC<Props> = ({ data, productId }) => {
+const Default: React.FC<Props> = ({ productMain, productId }) => {
     const swiperRef: any = useRef();
     const [photoIndex, setPhotoIndex] = useState(0)
     const [openPopupImg, setOpenPopupImg] = useState(false)
@@ -41,10 +41,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
     const { openModalWishlist } = useModalWishlistContext()
     const { addToCompare, removeFromCompare, compareState } = useCompare();
     const { openModalCompare } = useModalCompareContext()
-    let productMain = data.find(product => product.id === productId) as ProductType
-    if (productMain === undefined) {
-        productMain = data[0]
-    }
+
 
     const percentSale = Math.floor(100 - ((productMain?.price / productMain?.originPrice) * 100))
 
@@ -345,12 +342,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                                         </div>
                                         <span>Compare</span>
                                     </div>
-                                    <div className="share flex items-center gap-3 cursor-pointer">
-                                        <div className="share-btn md:w-12 md:h-12 w-10 h-10 flex items-center justify-center border border-line cursor-pointer rounded-xl duration-300 hover:bg-black hover:text-white">
-                                            <Icon.ShareNetwork weight='fill' className='heading6' />
-                                        </div>
-                                        <span>Share Products</span>
-                                    </div>
+
                                 </div>
                                 <div className="more-infor mt-6">
                                     <div className="flex items-center gap-4 flex-wrap">
@@ -366,16 +358,12 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                                     <div className="flex items-center gap-1 mt-3">
                                         <Icon.Timer className='body1' />
                                         <div className="text-title">Estimated Delivery:</div>
-                                        <div className="text-secondary">14 January - 18 January</div>
+                                        <div className="text-secondary">7 - 10 days</div>
                                     </div>
-                                    <div className="flex items-center gap-1 mt-3">
-                                        <Icon.Eye className='body1' />
-                                        <div className="text-title">38</div>
-                                        <div className="text-secondary">people viewing this product right now!</div>
-                                    </div>
+                                    
                                     <div className="flex items-center gap-1 mt-3">
                                         <div className="text-title">SKU:</div>
-                                        <div className="text-secondary">53453412</div>
+                                        <div className="text-secondary">{productMain.id}</div>
                                     </div>
                                     <div className="flex items-center gap-1 mt-3">
                                         <div className="text-title">Categories:</div>
@@ -472,38 +460,6 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="list-product hide-product-sold  menu-main mt-6">
-                                <div className="heading5 pb-4">You{String.raw`'ll`} love this too</div>
-                                <Swiper
-                                    spaceBetween={12}
-                                    slidesPerView={2}
-                                    scrollbar={{
-                                        hide: false,
-                                    }}
-                                    modules={[Navigation, Scrollbar]}
-                                    breakpoints={{
-                                        576: {
-                                            slidesPerView: 2,
-                                            spaceBetween: 12,
-                                        },
-                                        768: {
-                                            slidesPerView: 2,
-                                            spaceBetween: 20,
-                                        },
-                                        1290: {
-                                            slidesPerView: 3,
-                                            spaceBetween: 20,
-                                        },
-                                    }}
-                                    className='pb-4'
-                                >
-                                    {data.filter(item => item.action !== 'quick shop').slice(0, 5).map(product => (
-                                        <SwiperSlide key={product.id}>
-                                            <Product data={product} type='grid' style='style-1' />
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -517,12 +473,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                                 >
                                     Description
                                 </div>
-                                <div
-                                    className={`tab-item heading5 has-line-before text-secondary2 hover:text-black duration-300 ${activeTab === 'specifications' ? 'active' : ''}`}
-                                    onClick={() => handleActiveTab('specifications')}
-                                >
-                                    Specifications
-                                </div>
+                               
                             </div>
                         </div>
                         <div className="desc-block mt-8">
@@ -530,33 +481,13 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                                 <div className='grid md:grid-cols-2 gap-8 gap-y-5'>
                                     <div className="left">
                                         <div className="heading6">Description</div>
-                                        <div className="text-secondary mt-2">Keep your home organized, yet elegant with storage cabinets by Onita Patio Furniture. These cabinets not only make a great storage units, but also bring a great decorative accent to your decor. Traditionally designed, they are perfect to be used in the hallway, living room, bedroom, office or any place where you need to store or display things. Made of high quality materials, they are sturdy and durable for years. Bring one-of-a-kind look to your interior with furniture from Onita Furniture!</div>
-                                    </div>
-                                    <div className="right">
-                                        <div className="heading6">About This Products</div>
-                                        <div className="list-feature">
-                                            <div className="item flex gap-1 text-secondary mt-1">
-                                                <Icon.Dot size={28} />
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                            </div>
-                                            <div className="item flex gap-1 text-secondary mt-1">
-                                                <Icon.Dot size={28} />
-                                                <p>Nulla luctus libero quis mauris vestibulum dapibus.</p>
-                                            </div>
-                                            <div className="item flex gap-1 text-secondary mt-1">
-                                                <Icon.Dot size={28} />
-                                                <p>Maecenas ullamcorper erat mi, vel consequat enim suscipit at.</p>
-                                            </div>
-                                            <div className="item flex gap-1 text-secondary mt-1">
-                                                <Icon.Dot size={28} />
-                                                <p>Quisque consectetur nibh ac urna molestie scelerisque.</p>
-                                            </div>
-                                            <div className="item flex gap-1 text-secondary mt-1">
-                                                <Icon.Dot size={28} />
-                                                <p>Mauris in nisl scelerisque massa consectetur pretium sed et mauris.</p>
-                                            </div>
+                                        <div className="text-secondary mt-2">
+                                            {
+                                                productMain?.description    
+                                            }
                                         </div>
                                     </div>
+                                    
                                 </div>
                                 <div className="grid lg:grid-cols-4 grid-cols-2 gap-[30px] md:mt-10 mt-6">
                                     <div className="item">
@@ -1002,16 +933,6 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                                     <button className='button-main bg-white text-black border border-black'>Submit Reviews</button>
                                 </div>
                             </form>
-                        </div>
-                    </div>
-                </div>
-                <div className="related-product md:py-20 py-10">
-                    <div className="container">
-                        <div className="heading3 text-center">Related Products</div>
-                        <div className="list-product hide-product-sold  grid lg:grid-cols-4 grid-cols-2 md:gap-[30px] gap-5 md:mt-10 mt-6">
-                            {data.slice(Number(productId), Number(productId) + 4).map((item, index) => (
-                                <Product key={index} data={item} type='grid' style='style-1' />
-                            ))}
                         </div>
                     </div>
                 </div>

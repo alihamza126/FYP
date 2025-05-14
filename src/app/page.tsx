@@ -1,6 +1,3 @@
-'use client'
-
-import React from 'react'
 import TopNavThree from '@/components/Header/TopNav/TopNavThree'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import BannerTop from '@/components/Home1/BannerTop'
@@ -15,23 +12,38 @@ import testimonialData from '@/data/Testimonial.json'
 import Testimonial from '@/components/Home1/Testimonial'
 import Deal from '@/components/Home1/Deal'
 import SliderOne from '@/components/Slider/SliderOne'
+import Axios from '@/lib/Axios'
 
 
 
-export default function Home() {
+export default async function Home() {
+    let categoryData = [];
+    let trendingNowData = [];
+    let slidesData = [];
+    try {
+        const catRes = await Axios.get('/api/v1/category');
+        const trendRes = await Axios.get('/api/v1/product');
+        const slideRes = await Axios.get('/api/v1/slider');
+        slidesData = slideRes.data.sliders;
+        categoryData = catRes.data.categories;
+        trendingNowData = trendRes.data.products;
+    } catch (error) {
+
+    }
+
     return (
         <>
             <TopNavThree props="style-three bg-white" />
             <div id="header" className='relative w-full'>
                 <MenuTwo />
                 <BannerTop props="bg-black py-3" textColor='text-white' bgLine='bg-white' />
-                <SliderOne />
+                <SliderOne  slidesData={slidesData}/>
             </div>
-            <TrendingNow />
-            <Deal data={productData} start={4} limit={8} />
-            <TrendingProduct data={productData} start={10} limit={18} />
+            <TrendingNow categoryData={categoryData} />
+            <Deal data={trendingNowData} start={0} limit={4} />
+            <TrendingProduct data={trendingNowData} start={0} limit={18} />
             <FlashSale />
-            
+
             <Testimonial data={testimonialData} limit={5} />
             <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-3xl" />
             <Brand />
