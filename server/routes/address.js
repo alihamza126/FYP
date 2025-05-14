@@ -1,16 +1,17 @@
 import express from 'express'
 import { asyncWrapper } from '../helpers/asyncWrapper.js';
-import { authenticateJWT } from '../middleware/JwtAthenticate.js';
+import { authenticateUser } from '../middleware/auth.middleware.js';
 import { listAddresses, createAddress, updateAddress, deleteAddress } from '../controllers/address.controller.js'
 
 
 const addressRouter = express.Router();
 
-addressRouter.use(authenticateJWT)         // all `/api/addresses` routes need auth
-addressRouter.get('/', listAddresses)
-addressRouter.post('/', createAddress)
-addressRouter.patch('/:id', updateAddress)
-addressRouter.delete('/:id', deleteAddress)
+addressRouter.use(authenticateUser);
+
+addressRouter.get('/', asyncWrapper(listAddresses))
+addressRouter.post('/', asyncWrapper(createAddress))
+addressRouter.patch('/:id', asyncWrapper(updateAddress))
+addressRouter.delete('/:id', asyncWrapper(deleteAddress))
 
 
 

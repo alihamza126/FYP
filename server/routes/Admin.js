@@ -10,8 +10,6 @@ import {
 const adminRouter = express.Router();
 
 
-// router.use(authenticateJWT, ensureAdmin)
-
 // CRUD for users
 adminRouter.get('/users', listUsers)
 adminRouter.get('/users/:id', getUser)
