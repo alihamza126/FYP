@@ -8,13 +8,7 @@ import { redirect } from 'next/navigation'
 import axios from 'axios'
 
 export default async function Page() {
-    // 1. Ensure the user is authenticated
     const session = await getServerSession(authOptions)
-    if (!session) {
-        redirect('/login')
-    }
-
-    // 2. Fetch user data from your backend
     let userData = null
     try {
         const response = await axios.get(

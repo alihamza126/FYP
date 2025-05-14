@@ -29,7 +29,7 @@ const MenuTwo = () => {
     const { cartState } = useCart()
     const { openModalWishlist } = useModalWishlistContext()
     const { openModalSearch } = useModalSearchContext();
-    const { data: session } = useSession();
+    const { data: session, } = useSession();
     console.log(session)
 
 
