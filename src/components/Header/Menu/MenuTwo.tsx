@@ -30,6 +30,7 @@ const MenuTwo = () => {
     const { openModalWishlist } = useModalWishlistContext()
     const { openModalSearch } = useModalSearchContext();
     const { data: session } = useSession();
+    console.log(session)
 
 
     const handleOpenSubNavMobile = (index: number) => {
