@@ -22,9 +22,9 @@ const Login = () => {
     const pathname = searchParams.get("callbackUrl") || '/';
 
 
-    // if (status === 'authenticated' && session) {
-    //   router.replace('/');
-    // }
+    if (status === 'authenticated' && session) {
+      router.replace('/');
+    }
 
 
 

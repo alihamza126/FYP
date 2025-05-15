@@ -9,5 +9,6 @@ export const publicPages = [
 	'/privacy',
 	'/verifyemail',
 	'/resetpassword',
-	'/pages/about'
+	'/pages/about',
+	'/checkout',
 ]
