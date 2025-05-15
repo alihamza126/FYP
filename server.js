@@ -13,6 +13,7 @@ import categoryRouter from './server/routes/category.js';
 import adminRouter from './server/routes/Admin.js';
 import productRouter from './server/routes/product.js';
 import sliderRouter from './server/routes/slider.js';
+import paymentRouter from './server/routes/payment.js';
 dotenv.config({
   path: "./.env.local",
 }); // 👈 
@@ -41,8 +42,12 @@ connectMongoDB();
 
 
 app.prepare().then(() => {
+
+
+
+  expressApp.use(cookieParser());
+  expressApp.use("/api/v1/payment", paymentRouter);
   expressApp.use(express.json());
-  expressApp.use(cookieParser())
 
   //routes start from here
   expressApp.use("/api/v1/users", userRouter);
@@ -51,6 +56,7 @@ app.prepare().then(() => {
   expressApp.use("/api/v1/category", categoryRouter);
   expressApp.use("/api/v1/product", productRouter);
   expressApp.use("/api/v1/slider", sliderRouter);
+
 
 
 
