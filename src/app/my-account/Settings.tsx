@@ -29,7 +29,7 @@ interface FormValues {
 }
 
 export default function Settings({ image, firstName, lastName, phone, gender, dob }: SettingsProps) {
-    const { data: session } = useSession()
+    const { update } = useSession()
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const {
@@ -60,17 +60,14 @@ export default function Settings({ image, firstName, lastName, phone, gender, do
     }, [image, firstName, lastName, phone, gender, dob, setValue])
 
     const onSubmit = async (data: FormValues) => {
-        if (!session?.accessToken) {
-            toast.error('You must be signed in to update settings')
-            return
-        }
         setIsSubmitting(true)
         try {
             await Axios.patch(
-                `/api/v1/users/update/${session.user.id}`,
+                `/api/v1/users/update`,
                 data
             )
             toast.success('Settings saved successfully')
+            update();
         } catch (err: any) {
             toast.error(err.response?.data?.error || 'Failed to save settings')
         } finally {

@@ -44,6 +44,50 @@ export async function updateUser(req, res, next) {
   }
 }
 
+export async function createUser(req, res, next) {
+  try {
+    const { username, email, password, role, isVerfied, isAdmin, ...userData } = req.body
+
+    // Check if username or email already exists
+    const existingUser = await Usermodel.findOne({
+      $or: [{ username }, { email }],
+    })
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: `${existingUser.username === username ? "Username" : "Email"} already exists`,
+      })
+    }
+
+    // Hash password if provided
+    let hashedPassword
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 10)
+    }
+
+    // Create new user
+    const newUser = new Usermodel({
+      username,
+      email,
+      password: hashedPassword,
+      role,
+      isVerfied,
+      isAdmin: role === "admin" ? true : isAdmin,
+      ...userData,
+    })
+
+    await newUser.save()
+
+    // Return user without password
+    const userResponse = newUser.toObject()
+    delete userResponse.password
+
+    res.status(201).json(userResponse)
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message })
+  }
+}
+
 // Delete user (admin only)
 export async function deleteUser(req, res, next) {
   try {

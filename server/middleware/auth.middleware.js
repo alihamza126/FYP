@@ -2,6 +2,7 @@ import { getToken } from "next-auth/jwt";
 
 export const authenticateUser = async (req, res, next) => {
     try {
+    
         const token = await getToken({
             req,
             secret: process.env.NEXTAUTH_SECRET,
@@ -21,13 +22,9 @@ export const authenticateUser = async (req, res, next) => {
 
 
 export const isAdmin = async (req, res, next) => {
-    return (req, res, next) => {
-        const user = req.user;
+    if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).json({ message: "Forbidden: Insufficient role" });
+    }
 
-        if (!user || user.role !== 'admin') {
-            return res.status(403).json({ message: "Forbidden: Insufficient role" });
-        }
-
-        next();
-    };
+    next();
 };

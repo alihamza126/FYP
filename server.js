@@ -46,7 +46,7 @@ app.prepare().then(() => {
 
   //routes start from here
   expressApp.use("/api/v1/users", userRouter);
-  expressApp.use("/api/v1/superadmin", adminRouter);
+  expressApp.use("/api/v1/superadmin", adminRouter); //for superadmin
   expressApp.use("/api/v1/address", addressRouter);
   expressApp.use("/api/v1/category", categoryRouter);
   expressApp.use("/api/v1/product", productRouter);
