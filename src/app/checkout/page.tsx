@@ -7,7 +7,7 @@ import Breadcrumb from "@/components/Breadcrumb/Breadcrumb"
 import Footer from "@/components/Footer/Footer"
 import * as Icon from "@phosphor-icons/react/dist/ssr"
 import { useCart } from "@/context/CartContext"
-import { useSearchParams } from "next/navigation"
+import { redirect, useRouter, useSearchParams } from "next/navigation"
 import LoginComponent from "./LoginComponent"
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
@@ -15,6 +15,7 @@ import Axios from "@/lib/Axios"
 import { useForm } from "react-hook-form"
 import { Alert } from "@heroui/react"
 import { AlertCircle } from "lucide-react"
+import toast from "react-hot-toast"
 
 // Initialize Stripe with your publishable key
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "")
@@ -64,7 +65,8 @@ const CheckoutForm = ({ totalAmount }) => {
 const Checkout = () => {
     const searchParams = useSearchParams()
     const discount = searchParams.get("discount")
-    const ship = searchParams.get("ship")
+    const ship = searchParams.get("ship");
+    const router = useRouter();
 
     const { cartState } = useCart()
     let [totalCart, setTotalCart] = useState<number>(0)
@@ -120,7 +122,29 @@ const Checkout = () => {
                 })
                 .catch((err) => console.log(err));
         }
-    }, [finalAmount, isValid])
+    }, [finalAmount, isValid]);
+
+    const handleCod = async () => {
+        const shippingInfo = getValues();
+        // items, shippingInfo, amount
+        if (finalAmount > 0 && isValid && cartState.cartArray.length > 0) {
+            const shippingInfo = getValues();
+            const cartIds = cartState.cartArray.map((item) => ({ productId: item._id, quantity: 1 }));
+            const toastId = toast.loading("Placing order...")
+            Axios.post("/api/v1/orders/place", {
+                amount: finalAmount,
+                shippingInfo,
+                items: cartIds,
+                isCod: true
+            })
+                .then((res) => {
+                    toast.dismiss(toastId);
+                    toast.success("Order placed successfully")
+                    router.push(`/order-confirmation?totalAmount=${finalAmount}`)
+                })
+                .catch((err) => console.log(err));
+        }
+    }
 
     const appearance = {
         theme: "stripe",
@@ -342,7 +366,7 @@ const Checkout = () => {
                                                                     </div>
                                                                     {activePayment === "cash-delivery" && (
                                                                         <div className="block-button md:mt-10 mt-6">
-                                                                            <button className="button-main w-full">Complete Order</button>
+                                                                            <button className="button-main w-full" type="button" onClick={handleCod} >Complete Order</button>
                                                                         </div>
                                                                     )}
                                                                 </div>

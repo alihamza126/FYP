@@ -36,7 +36,7 @@ export async function createOrder({ userId, items, shippingInfo, paymentIntentId
 // Create a new order (authenticated user)
 export async function createUserOrder(req, res, next) {
     try {
-        const { items, shippingInfo, amount } = req.body;
+        const { items, shippingInfo, amount, isCod } = req.body;
 
         const formattedItems = items.map(i => ({
             productId: i.productId,
@@ -48,8 +48,8 @@ export async function createUserOrder(req, res, next) {
             items: formattedItems,
             shippingInfo,
             amount,
-            isCod: true,
-            status: 'piad',
+            isCod,
+            status: 'pending',
             paidAt: new Date(),
         });
 
@@ -62,7 +62,7 @@ export async function createUserOrder(req, res, next) {
 export async function getMyOrders(req, res, next) {
     try {
         const orders = await Order.find({ userId: req.user.id })
-            .populate('items.productId', 'name price image status orderId paidAt')
+            .populate('items.productId', 'name price images id status orderId paidAt')
             .sort({ createdAt: -1 });
 
         res.status(200).json({

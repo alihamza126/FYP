@@ -1,25 +1,47 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import TopNavOne from '@/components/Header/TopNav/TopNavOne'
-import MenuOne from '@/components/Header/Menu/MenuOne'
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb'
 import Footer from '@/components/Footer/Footer'
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Settings from './Settings'
-import Address from './Address'
 import Orders from './Orders'
 import { signOut, useSession } from 'next-auth/react'
 import AddressManager from './AddressManager'
 import MenuTwo from '@/components/Header/Menu/MenuTwo'
+import Axios from '@/lib/Axios'
 
 
 const MyAccount = ({ userData }: { userData: any }) => {
     const [activeTab, setActiveTab] = useState<string | undefined>('dashboard');
     const [activeAddress, setActiveAddress] = useState<string | null>('shipping');
+    const [orders, setOrders] = useState([]);
+    const [ordersCount, setOrdersCount] = useState(0);
+    const [canceledOrdersCount, setCanceledOrdersCount] = useState(0);
+    const [shippedOrdersCount, setShippedOrdersCount] = useState(0);
 
     const { data: session, status } = useSession();
+
+    const fetchOrders = async () => {
+        try {
+            const res = await Axios.get('/api/v1/orders/me');
+            setOrders(res.data.data);
+            setOrdersCount(res.data.count);
+            const canceledOrders = res.data.data.filter((order: any) => order.status === 'canceled');
+            setCanceledOrdersCount(canceledOrders.length);
+            const shippedOrders = res.data.data.filter((order: any) => order.status === 'shipped');
+            setShippedOrdersCount(shippedOrders.length);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    useEffect(() => {
+        fetchOrders();
+    }, [])
 
     const handleActiveAddress = (order: string) => {
         setActiveAddress(prevOrder => prevOrder === order ? null : order)
@@ -83,21 +105,21 @@ const MyAccount = ({ userData }: { userData: any }) => {
                                     <div className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
                                         <div className="counter">
                                             <span className="text-secondary">Awaiting Pickup</span>
-                                            <h5 className="heading5 mt-1">4</h5>
+                                            <h5 className="heading5 mt-1">{shippedOrdersCount}</h5>
                                         </div>
                                         <Icon.HourglassMedium className='text-4xl' />
                                     </div>
                                     <div className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
                                         <div className="counter">
                                             <span className="text-secondary">Cancelled Orders</span>
-                                            <h5 className="heading5 mt-1">12</h5>
+                                            <h5 className="heading5 mt-1">{canceledOrdersCount}</h5>
                                         </div>
                                         <Icon.ReceiptX className='text-4xl' />
                                     </div>
                                     <div className="item flex items-center justify-between p-5 border border-line rounded-lg box-shadow-xs">
                                         <div className="counter">
                                             <span className="text-secondary">Total Number of Orders</span>
-                                            <h5 className="heading5 mt-1">200</h5>
+                                            <h5 className="heading5 mt-1">{ordersCount}</h5>
                                         </div>
                                         <Icon.Package className='text-4xl' />
                                     </div>
@@ -108,121 +130,74 @@ const MyAccount = ({ userData }: { userData: any }) => {
                                         <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
                                             <thead className="border-b border-line">
                                                 <tr>
-                                                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Order</th>
-                                                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Products</th>
-                                                    <th scope="col" className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">Pricing</th>
-                                                    <th scope="col" className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">Status</th>
+                                                    <th className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">
+                                                        Order
+                                                    </th>
+                                                    <th className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">
+                                                        Items
+                                                    </th>
+                                                    <th className="pb-3 text-left text-sm font-bold uppercase text-secondary whitespace-nowrap">
+                                                        Price
+                                                    </th>
+                                                    <th className="pb-3 text-right text-sm font-bold uppercase text-secondary whitespace-nowrap">
+                                                        Status
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className="item duration-300 border-b border-line">
-                                                    <th scope="row" className="py-3 text-left">
-                                                        <strong className="text-title">54312452</strong>
-                                                    </th>
-                                                    <td className="py-3">
-                                                        <Link href={'/product/default'} className="product flex items-center gap-3">
-                                                            <Image src={'/images/product/1000x1000.png'} width={400} height={400} alt='Contrasting sweatshirt' className="flex-shrink-0 w-12 h-12 rounded" />
-                                                            <div className="info flex flex-col">
-                                                                <strong className="product_name text-button">Contrasting sweatshirt</strong>
-                                                                <span className="product_tag caption1 text-secondary">Women, Clothing</span>
+                                                {orders?.map((order) => (
+                                                    <tr key={order._id} className="item duration-300 border-b border-line">
+                                                        {/* Order ID */}
+                                                        <th scope="row" className="py-3 text-left align-top">
+                                                            <strong className="text-title">{order.orderId}</strong>
+                                                        </th>
+
+                                                        {/* Product Images */}
+                                                        <td className="py-3">
+                                                            <div className="flex space-x-2">
+                                                                {order.items.map((item) => (
+                                                                    <Link href={`product?id=${item.productId.id}`}>
+                                                                        <Image
+                                                                            key={item._id}
+                                                                            src={item?.productId?.images[0] || "/images/product/1000x1000.png"}
+                                                                            width={40}
+                                                                            height={40}
+                                                                            alt={item.productId.name}
+                                                                            className="rounded"
+                                                                        />
+                                                                    </Link>
+                                                                ))}
                                                             </div>
-                                                        </Link>
-                                                    </td>
-                                                    <td className="py-3 price">$45.00</td>
-                                                    <td className="py-3 text-right">
-                                                        <span className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-yellow text-yellow caption1 font-semibold">Pending</span>
-                                                    </td>
-                                                </tr>
-                                                <tr className="item duration-300 border-b border-line">
-                                                    <th scope="row" className="py-3 text-left">
-                                                        <strong className="text-title">54312452</strong>
-                                                    </th>
-                                                    <td className="py-3">
-                                                        <Link href={'/product/default'} className="product flex items-center gap-3">
-                                                            <Image src={'/images/product/1000x1000.png'} width={400} height={400} alt='Faux-leather trousers' className="flex-shrink-0 w-12 h-12 rounded" />
-                                                            <div className="info flex flex-col">
-                                                                <strong className="product_name text-button">Faux-leather trousers</strong>
-                                                                <span className="product_tag caption1 text-secondary">Women, Clothing</span>
-                                                            </div>
-                                                        </Link>
-                                                    </td>
-                                                    <td className="py-3 price">$45.00</td>
-                                                    <td className="py-3 text-right">
-                                                        <span className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-purple text-purple caption1 font-semibold">Delivery</span>
-                                                    </td>
-                                                </tr>
-                                                <tr className="item duration-300 border-b border-line">
-                                                    <th scope="row" className="py-3 text-left">
-                                                        <strong className="text-title">54312452</strong>
-                                                    </th>
-                                                    <td className="py-3">
-                                                        <Link href={'/product/default'} className="product flex items-center gap-3">
-                                                            <Image src={'/images/product/1000x1000.png'} width={400} height={400} alt='V-neck knitted top' className="flex-shrink-0 w-12 h-12 rounded" />
-                                                            <div className="info flex flex-col">
-                                                                <strong className="product_name text-button">V-neck knitted top</strong>
-                                                                <span className="product_tag caption1 text-secondary">Women, Clothing</span>
-                                                            </div>
-                                                        </Link>
-                                                    </td>
-                                                    <td className="py-3 price">$45.00</td>
-                                                    <td className="py-3 text-right">
-                                                        <span className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-success text-success caption1 font-semibold">Completed</span>
-                                                    </td>
-                                                </tr>
-                                                <tr className="item duration-300 border-b border-line">
-                                                    <th scope="row" className="py-3 text-left">
-                                                        <strong className="text-title">54312452</strong>
-                                                    </th>
-                                                    <td className="py-3">
-                                                        <Link href={'/product/default'} className="product flex items-center gap-3">
-                                                            <Image src={'/images/product/1000x1000.png'} width={400} height={400} alt='Contrasting sweatshirt' className="flex-shrink-0 w-12 h-12 rounded" />
-                                                            <div className="info flex flex-col">
-                                                                <strong className="product_name text-button">Contrasting sweatshirt</strong>
-                                                                <span className="product_tag caption1 text-secondary">Women, Clothing</span>
-                                                            </div>
-                                                        </Link>
-                                                    </td>
-                                                    <td className="py-3 price">$45.00</td>
-                                                    <td className="py-3 text-right">
-                                                        <span className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-yellow text-yellow caption1 font-semibold">Pending</span>
-                                                    </td>
-                                                </tr>
-                                                <tr className="item duration-300 border-b border-line">
-                                                    <th scope="row" className="py-3 text-left">
-                                                        <strong className="text-title">54312452</strong>
-                                                    </th>
-                                                    <td className="py-3">
-                                                        <Link href={'/product/default'} className="product flex items-center gap-3">
-                                                            <Image src={'/images/product/1000x1000.png'} width={400} height={400} alt='Faux-leather trousers' className="flex-shrink-0 w-12 h-12 rounded" />
-                                                            <div className="info flex flex-col">
-                                                                <strong className="product_name text-button">Faux-leather trousers</strong>
-                                                                <span className="product_tag caption1 text-secondary">Women, Clothing</span>
-                                                            </div>
-                                                        </Link>
-                                                    </td>
-                                                    <td className="py-3 price">$45.00</td>
-                                                    <td className="py-3 text-right">
-                                                        <span className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-purple text-purple caption1 font-semibold">Delivery</span>
-                                                    </td>
-                                                </tr>
-                                                <tr className="item duration-300">
-                                                    <th scope="row" className="py-3 text-left">
-                                                        <strong className="text-title">54312452</strong>
-                                                    </th>
-                                                    <td className="py-3">
-                                                        <Link href={'/product/default'} className="product flex items-center gap-3">
-                                                            <Image src={'/images/product/1000x1000.png'} width={400} height={400} alt='V-neck knitted top' className="flex-shrink-0 w-12 h-12 rounded" />
-                                                            <div className="info flex flex-col">
-                                                                <strong className="product_name text-button">V-neck knitted top</strong>
-                                                                <span className="product_tag caption1 text-secondary">Women, Clothing</span>
-                                                            </div>
-                                                        </Link>
-                                                    </td>
-                                                    <td className="py-3 price">$45.00</td>
-                                                    <td className="py-3 text-right">
-                                                        <span className="tag px-4 py-1.5 rounded-full bg-opacity-10 bg-red text-red caption1 font-semibold">Canceled</span>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+
+                                                        {/* Total Price */}
+                                                        <td className="py-3 price">
+                                                            {order.currency.toUpperCase()} {order.amount.toFixed(2)}
+                                                        </td>
+
+                                                        {/* Status */}
+                                                        <td className="py-3 text-right align-top">
+                                                            <span
+                                                                className={`tag px-4 py-1.5 rounded-full caption1 font-semibold
+                                                    ${order.status === "pending"
+                                                                        ? "bg-yellow bg-opacity-10 text-yellow"
+                                                                        : ""
+                                                                    }
+                                                    ${order.status === "completed"
+                                                                        ? "bg-green bg-opacity-10 text-green"
+                                                                        : ""
+                                                                    }
+                                                    ${order.status === "cancelled"
+                                                                        ? "bg-red bg-opacity-10 text-red"
+                                                                        : ""
+                                                                    }
+                                                    `}
+                                                            >
+                                                                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                ))}
                                             </tbody>
                                         </table>
                                     </div>
@@ -242,7 +217,7 @@ const MyAccount = ({ userData }: { userData: any }) => {
                                         <Icon.CaretDown className='text-2xl ic_down duration-300' />
                                     </button>
 
-                                    <AddressManager/>
+                                    <AddressManager />
                                 </form>
                             </div>
                             <div className={`tab text-content w-full p-7 border border-line rounded-xl ${activeTab === 'setting' ? 'block' : 'hidden'}`}>

@@ -13,7 +13,6 @@ import { useModalCartContext } from '@/context/ModalCartContext';
 import { useModalWishlistContext } from '@/context/ModalWishlistContext';
 import { useModalSearchContext } from '@/context/ModalSearchContext';
 import { useCart } from '@/context/CartContext';
-import { useWishlist } from '@/context/WishlistContext';
 import { useRouter } from 'next/navigation';
 import { Avatar, Button } from '@heroui/react';
 import {  signOut, useSession } from 'next-auth/react';
@@ -30,7 +29,7 @@ const MenuTwo = () => {
     const { openModalWishlist } = useModalWishlistContext()
     const { openModalSearch } = useModalSearchContext();
     const { data: session, } = useSession();
-    console.log(session)
+
 
 
     const handleOpenSubNavMobile = (index: number) => {

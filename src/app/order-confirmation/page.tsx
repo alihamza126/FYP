@@ -1,7 +1,5 @@
 'use client'
-
-import React, { useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import {  useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CheckCircle } from 'lucide-react'
 import Link from 'next/link';
@@ -10,19 +8,10 @@ import MenuTwo from '@/components/Header/Menu/MenuTwo'
 import TopNavThree from '@/components/Header/TopNav/TopNavThree'
 
 export default function OrderSuccessPage() {
-  const router = useRouter()
   const params = useSearchParams()
   const totalParam = params.get('totalAmount')
-  const paymentIntentId = params.get('payment_intent')
 
-  // Redirect if missing params
-  useEffect(() => {
-    if (!totalParam || !paymentIntentId) {
-      router.replace('/')
-    }
-  }, [totalParam, paymentIntentId, router])
-
-  // Parse amount in cents to dollars
+  // Parse amount in cents to pkr
   const amount = totalParam ? parseFloat(totalParam).toFixed(0) : '0.00'
 
   return (
