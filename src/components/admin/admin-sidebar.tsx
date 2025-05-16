@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, ShoppingBag, Users, Settings, LogOut, Menu, X, ChartBarStacked, Move3D } from "lucide-react"
+import { LayoutDashboard, ShoppingBag, Users, Settings, LogOut, Menu, X, ChartBarStacked, Move3D, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import {
@@ -38,6 +38,11 @@ export function AdminSidebar() {
       title: "Dashboard",
       href: "/admin",
       icon: <LayoutDashboard className="h-5 w-5" />,
+    },
+    {
+      title: "Orders",
+      href: "/admin/orders",
+      icon: <ShoppingCart className="h-5 w-5" />,
     },
     {
       title: "Products",

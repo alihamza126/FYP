@@ -14,6 +14,7 @@ import adminRouter from './server/routes/Admin.js';
 import productRouter from './server/routes/product.js';
 import sliderRouter from './server/routes/slider.js';
 import paymentRouter from './server/routes/payment.js';
+import ordersRouter from './server/routes/orders.js';
 dotenv.config({
   path: "./.env.local",
 }); // 👈 
@@ -56,6 +57,7 @@ app.prepare().then(() => {
   expressApp.use("/api/v1/category", categoryRouter);
   expressApp.use("/api/v1/product", productRouter);
   expressApp.use("/api/v1/slider", sliderRouter);
+  expressApp.use("/api/v1/orders", ordersRouter);
 
 
 
