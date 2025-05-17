@@ -82,7 +82,7 @@ const Orders = () => {
             <div className="list_prd px-5">
               {order.items.map(item => (
                 <div key={item._id} className="prd_item flex flex-wrap items-center justify-between gap-3 py-5 border-b border-line">
-                  <Link href={`/product/${item.productId._id}`} className="flex items-center gap-5">
+                  <Link href={`/product?id=${item.productId.id}`} className="flex items-center gap-5">
                     <div className="bg-img flex-shrink-0 md:w-[100px] w-20 aspect-square rounded-lg overflow-hidden">
                       <Image
                         src={item.productId.images[0] || '/images/product/1000x1000.png'}
@@ -186,7 +186,7 @@ const Orders = () => {
               <div className="list_prd">
                 {selectedOrder.items.map(item => (
                   <div key={item._id} className="prd_item flex flex-wrap items-center justify-between gap-3 py-5 border-b border-line">
-                    <Link href={`/product/${item.productId._id}`} className="flex items-center gap-5">
+                    <Link href={`/product?id=${item.productId.id}`} className="flex items-center gap-5">
                       <div className="bg-img flex-shrink-0 md:w-[100px] w-20 aspect-square rounded-lg overflow-hidden">
                         <Image
                           src={item.productId.images[0] || '/images/product/1000x1000.png'}

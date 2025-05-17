@@ -163,7 +163,7 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      {error && <div className="bg-red-100 text-red-800 p-4 rounded-md mb-6">{error}</div>}
+      {error && <div className="bg-red/10 text-red p-4 rounded-md mb-6">{error}</div>}
 
       <div className="bg-white rounded-md shadow overflow-hidden">
         <Table>
