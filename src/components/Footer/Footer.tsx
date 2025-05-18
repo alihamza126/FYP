@@ -21,9 +21,9 @@ const Footer = () => {
                                         <span className="text-button mt-3">Address:</span>
                                     </div>
                                     <div className="flex flex-col ">
-                                        <span className=''>hi.avitex@gmail.com</span>
-                                        <span className='mt-3'>1-333-345-6868</span>
-                                        <span className='mt-3 pt-px'>549 Oak St.Crystal Lake, IL 60014</span>
+                                        <span className=''>alihamzah.dev@gmail.com</span>
+                                        <span className='mt-3'>92-303-7828419</span>
+                                        <span className='mt-3 pt-px'>Goheer Town Bahwalpur</span>
                                     </div>
                                 </div>
                             </div>
@@ -32,18 +32,16 @@ const Footer = () => {
                                     <div className="item flex flex-col basis-1/3 ">
                                         <div className="text-button-uppercase pb-3">Infomation</div>
                                         <Link className='caption1 has-line-before duration-300 w-fit' href={'/pages/contact'}>Contact us</Link>
-                                        <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'#!'}>Career</Link>
+                                        {/* <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'#!'}>Career</Link> */}
                                         <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/my-account'}>My Account</Link>
                                         <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/order-tracking'}>Order  & Returns</Link>
                                         <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/pages/faqs'}>FAQs</Link>
                                     </div>
                                     <div className="item flex flex-col basis-1/3 ">
                                         <div className="text-button-uppercase pb-3">Quick Shop</div>
-                                        <Link className='caption1 has-line-before duration-300 w-fit' href={'/shop/breadcrumb1'}>Women</Link>
-                                        <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/shop/breadcrumb1'}>Men</Link>
-                                        <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/shop/breadcrumb1'}>Clothes</Link>
-                                        <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/shop/breadcrumb1'}>Accessories</Link>
-                                        <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/blog'}>Blog</Link>
+                                        <Link className='caption1 has-line-before duration-300 w-fit' href={'/shop'}>Women</Link>
+                                        <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/shop'}>Men</Link>
+                                        <Link className='caption1 has-line-before duration-300 w-fit pt-2' href={'/shop'}>Clothes</Link>
                                     </div>
                                     <div className="item flex flex-col basis-1/3 ">
                                         <div className="text-button-uppercase pb-3">Customer Services</div>
@@ -65,20 +63,21 @@ const Footer = () => {
                                         </form>
                                     </div>
                                     <div className="list-social flex items-center gap-6 mt-4">
-                                        <Link href={'https://www.facebook.com/'} target='_blank'>
+                                        <Link href={'https://www.facebook.com/AliDeveloper126/'} target='_blank'>
                                             <div className="icon-facebook text-2xl text-black"></div>
                                         </Link>
-                                        <Link href={'https://www.instagram.com/'} target='_blank'>
+                                        <Link href={'https://www.instagram.com/itx.hamza126/'} target='_blank'>
                                             <div className="icon-instagram text-2xl text-black"></div>
                                         </Link>
-                                        <Link href={'https://www.twitter.com/'} target='_blank'>
-                                            <div className="icon-twitter text-2xl text-black"></div>
+                                        <Link href={'https://github.com/alihamza126'} target='_blank'>
+                                            <div className="icon-git text-2xl text-black">
+                                                <Icon.GithubLogo size={24} color='#000' />
+                                            </div>
                                         </Link>
-                                        <Link href={'https://www.youtube.com/'} target='_blank'>
-                                            <div className="icon-youtube text-2xl text-black"></div>
-                                        </Link>
-                                        <Link href={'https://www.pinterest.com/'} target='_blank'>
-                                            <div className="icon-pinterest text-2xl text-black"></div>
+                                        <Link href={'http://linkedin.com/in/ali-hamza-4aa31021a/'} target='_blank'>
+                                            <div className="icon-linkedin text-2xl text-black">
+                                                <Icon.LinkedinLogo size={24} color='#000' />
+                                            </div>
                                         </Link>
                                     </div>
                                 </div>
@@ -86,21 +85,19 @@ const Footer = () => {
                         </div>
                         <div className="footer-bottom py-3 flex items-center justify-between gap-5 max-lg:justify-center max-lg:flex-col border-t border-line">
                             <div className="left flex items-center gap-8">
-                                <div className="copyright caption1 text-secondary">©2023 Anvogue. All Rights Reserved.</div>
+                                <div className="copyright caption1 text-secondary">©2025 A-Cart. All Rights Reserved.</div>
                                 <div className="select-block flex items-center gap-5 max-md:hidden">
                                     <div className="choose-language flex items-center gap-1.5">
                                         <select name="language" id="chooseLanguageFooter" className='caption2 bg-transparent'>
                                             <option value="English">English</option>
-                                            <option value="Espana">Espana</option>
-                                            <option value="France">France</option>
+                                            
                                         </select>
                                         <Icon.CaretDown size={12} color='#1F1F1F' />
                                     </div>
                                     <div className="choose-currency flex items-center gap-1.5">
                                         <select name="currency" id="chooseCurrencyFooter" className='caption2 bg-transparent'>
-                                            <option value="USD">USD</option>
-                                            <option value="EUR">EUR</option>
-                                            <option value="GBP">GBP</option>
+                                            <option value="USD">PKR</option>
+                                            
                                         </select>
                                         <Icon.CaretDown size={12} color='#1F1F1F' />
                                     </div>

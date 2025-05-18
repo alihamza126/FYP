@@ -44,14 +44,21 @@ const TopNavThree: React.FC<Props> = ({ props }) => {
                             </ul>
                         </div>
                         <div className="right-content flex items-center gap-5 max-md:hidden">
-                            <Link href={'https://www.facebook.com/'} target='_blank'>
-                                <i className="icon-facebook text-black"></i>
+                            <Link href={'https://www.facebook.com/AliDeveloper126/'} target='_blank'>
+                                <div className="icon-facebook text-xl text-black"></div>
                             </Link>
-                            <Link href={'https://www.instagram.com/'} target='_blank'>
-                                <i className="icon-instagram text-black"></i>
+                            <Link href={'https://www.instagram.com/itx.hamza126/'} target='_blank'>
+                                <div className="icon-instagram text-xl text-black"></div>
                             </Link>
-                            <Link href={'https://www.youtube.com/'} target='_blank'>
-                                <i className="icon-youtube text-black"></i>
+                            <Link href={'https://github.com/alihamza126'} target='_blank'>
+                                <div className="icon-git text-2xl text-black">
+                                    <Icon.GithubLogo size={18} color='#000' />
+                                </div>
+                            </Link>
+                            <Link href={'http://linkedin.com/in/ali-hamza-4aa31021a/'} target='_blank'>
+                                <div className="icon-linkedin text-2xl text-black">
+                                    <Icon.LinkedinLogo size={18} color='#000' />
+                                </div>
                             </Link>
                         </div>
                     </div>

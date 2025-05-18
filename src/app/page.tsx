@@ -37,7 +37,7 @@ export default async function Home() {
         <>
             <TopNavThree props="style-three bg-white" />
             <div id="header" className='relative w-full'>
-                <MenuTwo />
+                <MenuTwo categoryData={categoryData} />
                 <BannerTop props="bg-black py-3" textColor='text-white' bgLine='bg-white' />
                 <SliderOne slidesData={slidesData} />
             </div>

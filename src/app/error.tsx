@@ -36,7 +36,7 @@ export default function ErrorPage({
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-4 w-full">
+        <div className="flex flex-col justify-center sm:flex-row gap-4 w-full">
           <Button onClick={reset} className="flex items-center justify-center gap-2" variant="default">
             <RefreshCw className="h-4 w-4" />
             Try again

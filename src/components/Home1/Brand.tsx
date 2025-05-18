@@ -7,6 +7,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 
+
+
 const Brand = () => {
     return (
         <>
@@ -46,7 +48,7 @@ const Brand = () => {
                                         src={'/images/brand/1.png'}
                                         width={300}
                                         height={300}
-                                        alt='1'
+                                        alt='1' quality={100}
                                         className='h-full w-auto duration-500 relative object-cover'
                                     />
                                 </div>
@@ -57,7 +59,7 @@ const Brand = () => {
                                         src={'/images/brand/2.png'}
                                         width={300}
                                         height={300}
-                                        alt='1'
+                                        alt='1' quality={100}
                                         className='h-full w-auto duration-500 relative object-cover'
                                     />
                                 </div>
@@ -68,7 +70,7 @@ const Brand = () => {
                                         src={'/images/brand/3.png'}
                                         width={300}
                                         height={300}
-                                        alt='1'
+                                        alt='1' quality={100}
                                         className='h-full w-auto duration-500 relative object-cover'
                                     />
                                 </div>
@@ -79,7 +81,7 @@ const Brand = () => {
                                         src={'/images/brand/4.png'}
                                         width={300}
                                         height={300}
-                                        alt='1'
+                                        alt='1' quality={100}
                                         className='h-full w-auto duration-500 relative object-cover'
                                     />
                                 </div>
@@ -90,7 +92,7 @@ const Brand = () => {
                                         src={'/images/brand/5.png'}
                                         width={300}
                                         height={300}
-                                        alt='1'
+                                        alt='1' quality={100}
                                         className='h-full w-auto duration-500 relative object-cover'
                                     />
                                 </div>
@@ -101,6 +103,30 @@ const Brand = () => {
                                         src={'/images/brand/6.png'}
                                         width={300}
                                         height={300}
+                                        alt='1' quality={100}
+                                        className='h-full w-auto duration-500 relative object-cover'
+                                    />
+                                </div>
+                            </SwiperSlide>
+                            <SwiperSlide>
+                                <div className="brand-item relative flex items-center justify-center h-[36px]">
+                                    <Image
+                                        src={'/images/brand/7.png'}
+                                        width={300}
+                                        height={300}
+                                        alt='1'
+                                        quality={100}
+                                        className='h-full w-auto duration-500 relative object-cover'
+                                    />
+                                </div>
+                            </SwiperSlide>
+                            <SwiperSlide>
+                                <div className="brand-item relative flex items-center justify-center h-[36px]">
+                                    <Image
+                                        src={'/images/brand/8.png'}
+                                        width={300}
+                                        height={300}
+                                        quality={100}
                                         alt='1'
                                         className='h-full w-auto duration-500 relative object-cover'
                                     />
