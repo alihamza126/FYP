@@ -37,6 +37,7 @@ const SliderOne = ({ slidesData }: any) => {
                                             </div>
                                             <div className="sub-img absolute sm:w-1/2 w-3/5 2xl:-right-[60px] -right-[16px] bottom-0">
                                                 <Image
+                                                    quality={100}
                                                     src={item.image}
                                                     width={670}
                                                     height={936}
