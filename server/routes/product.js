@@ -96,7 +96,7 @@ productRouter.post("/", async (req, res) => {
 // GET /api/products/:id - Get single product
 productRouter.get("/:id", async (req, res) => {
     try {
-        const product = await Product.findOne({ id: req.params.id });
+        const product = await Product.findOne({ id: req.params.id }).populate("reviews");
 
         if (!product) {
             return res.status(404).json({ success: false, message: "Product not found" });

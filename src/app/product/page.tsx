@@ -13,11 +13,11 @@ const ProductDefault = () => {
     const searchParams = useSearchParams()
     let productId = searchParams.get('id');
     const [productData, setProductData] = useState({});
+    const [reviews, setReviews] = useState([]);
     const isOut = false;
 
     const fetchProduct = async () => {
         const res = await Axios.get(`/api/v1/product/${productId}`);
-        console.log(res.data.product)
         setProductData(res.data.product);
     }
     useEffect(() => {

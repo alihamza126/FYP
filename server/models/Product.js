@@ -30,6 +30,8 @@ const productSchema = new mongoose.Schema(
     description: { type: String, required: true },
     action: { type: String },
     slug: { type: String, required: true, unique: true },
+
+    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
   },
   { timestamps: true },
 )

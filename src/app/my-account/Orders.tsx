@@ -23,6 +23,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const res = await Axios.get('/api/v1/orders/me');
+      console.log(res.data)
       setOrders(res.data.data);
     } catch (error) {
       console.error(error);
@@ -44,9 +45,8 @@ const Orders = () => {
           {['all', 'pending', 'delivery', 'completed', 'canceled'].map((item, idx) => (
             <button
               key={idx}
-              className={`item relative px-3 py-2.5 text-secondary text-center duration-300 hover:text-black border-b-2 ${
-                activeOrders === item ? 'active border-black' : 'border-transparent'
-              }`}
+              className={`item relative px-3 py-2.5 text-secondary text-center duration-300 hover:text-black border-b-2 ${activeOrders === item ? 'active border-black' : 'border-transparent'
+                }`}
               onClick={() => handleActiveOrders(item)}
             >
               <span className='relative text-button z-[1]'>{item}</span>
@@ -67,12 +67,11 @@ const Orders = () => {
               </div>
               <div className="flex items-center gap-2">
                 <strong className="text-title">Order status:</strong>
-                <span className={`tag px-4 py-1.5 rounded-full bg-opacity-10 ${
-                  order.status === 'pending'   ? 'bg-yellow text-yellow'   :
-                  order.status === 'delivery'  ? 'bg-purple text-purple'  :
-                  order.status === 'completed' ? 'bg-success text-success' :
-                  'bg-red text-red'
-                } caption1 font-semibold`}>
+                <span className={`tag px-4 py-1.5 rounded-full bg-opacity-10 ${order.status === 'pending' ? 'bg-yellow text-yellow' :
+                  order.status === 'delivery' ? 'bg-purple text-purple' :
+                    order.status === 'completed' ? 'bg-success text-success' :
+                      'bg-red text-red'
+                  } caption1 font-semibold`}>
                   {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                 </span>
               </div>
@@ -127,6 +126,13 @@ const Orders = () => {
                 <button className="button-main bg-surface border border-line hover:bg-black text-black hover:text-white">
                   Cancel Order
                 </button>
+              )}
+              {order.status === 'delivered' && (
+                <Link href={`/review/${order.orderId}`}>
+                  <button className="button-main bg-surface border border-line hover:bg-black text-black hover:text-white">
+                    Review order
+                  </button>
+                </Link>
               )}
             </div>
           </div>

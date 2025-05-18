@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProductType } from '@/type/ProductType'
@@ -18,6 +18,8 @@ import { useModalWishlistContext } from '@/context/ModalWishlistContext'
 import { useCompare } from '@/context/CompareContext'
 import { useModalCompareContext } from '@/context/ModalCompareContext'
 import ModalSizeguide from '@/components/Modal/ModalSizeguide'
+import clsx from 'clsx'
+import { formatDate } from '@/lib/utils'
 
 SwiperCore.use([Navigation, Thumbs]);
 
@@ -25,6 +27,11 @@ interface Props {
     productMain: any
     productId: string | number | null
 }
+type Review = {
+    rating: 1 | 2 | 3 | 4 | 5;
+    images: string[];
+    // …other fields…
+};
 
 const Default: React.FC<Props> = ({ productMain, productId }) => {
     const swiperRef: any = useRef();
@@ -40,7 +47,32 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
     const { addToWishlist, removeFromWishlist, wishlistState } = useWishlist()
     const { openModalWishlist } = useModalWishlistContext()
     const { addToCompare, removeFromCompare, compareState } = useCompare();
-    const { openModalCompare } = useModalCompareContext()
+    const { openModalCompare } = useModalCompareContext();
+
+    const [reviews, setReviews] = useState(productMain.reviews || []);
+    const reviewsCount = useMemo(() => {
+        return reviews.reduce(
+            (acc, { rating }) => {
+                acc[rating] = (acc[rating] || 0) + 1;
+                return acc;
+            },
+            { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 } as Record<1 | 2 | 3 | 4 | 5, number>
+        );
+    }, [reviews]);
+
+
+    // flatten all images into one big array
+    const reviewImages = useMemo(
+        () => reviews.flatMap((r) => r.images),
+        [reviews]
+    );
+
+    const AverageRating= useMemo(() => {
+        const totalRating = reviews.reduce((acc, { rating }) => acc + rating, 0);
+        return totalRating / reviews.length || 0;
+    })
+
+
 
 
     const percentSale = Math.floor(100 - ((productMain?.price / productMain?.originPrice) * 100))
@@ -62,15 +94,15 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
         setActiveColor(item)
 
         // // Find variation with selected color
-        // const foundColor = productMain.variation.find((variation) => variation.color === item);
-        // // If found, slide next to img
-        // if (foundColor) {
-        //     const index = productMain.images.indexOf(foundColor.image);
+        const foundColor = productMain.variation.find((variation) => variation.color === item);
 
-        //     if (index !== -1) {
-        //         swiperRef.current?.slideTo(index);
-        //     }
-        // }
+        if (foundColor) {
+            const index = productMain.images.indexOf(foundColor.image);
+
+            if (index !== -1) {
+                swiperRef.current?.slideTo(index);
+            }
+        }
     }
 
     const handleActiveSize = (item: string) => {
@@ -360,7 +392,7 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                         <div className="text-title">Estimated Delivery:</div>
                                         <div className="text-secondary">7 - 10 days</div>
                                     </div>
-                                    
+
                                     <div className="flex items-center gap-1 mt-3">
                                         <div className="text-title">SKU:</div>
                                         <div className="text-secondary">{productMain.id}</div>
@@ -473,7 +505,7 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                 >
                                     Description
                                 </div>
-                               
+
                             </div>
                         </div>
                         <div className="desc-block mt-8">
@@ -483,11 +515,11 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                         <div className="heading6">Description</div>
                                         <div className="text-secondary mt-2">
                                             {
-                                                productMain?.description    
+                                                productMain?.description
                                             }
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                                 <div className="grid lg:grid-cols-4 grid-cols-2 gap-[30px] md:mt-10 mt-6">
                                     <div className="item">
@@ -589,15 +621,14 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                     <div className="container">
                         <div className="heading flex items-center justify-between flex-wrap gap-4">
                             <div className="heading4">Customer Review</div>
-                            <Link href={'#form-review'} className='button-main bg-white text-black border border-black'>Write Reviews</Link>
                         </div>
                         <div className="top-overview flex justify-between py-6 max-md:flex-col gap-y-6">
                             <div className="rating lg:w-1/4 md:w-[30%] lg:pr-[75px] md:pr-[35px]">
                                 <div className="heading flex items-center justify-center flex-wrap gap-3 gap-y-4">
-                                    <div className="text-display">4.6</div>
+                                    <div className="text-display">{AverageRating.toFixed(1)}</div>
                                     <div className='flex flex-col items-center'>
                                         <Rate currentRate={5} size={18} />
-                                        <div className='text-secondary text-center mt-1'>(1,968 Ratings)</div>
+                                        <div className='text-secondary text-center mt-1'>({reviews.reduce((total, review) => total + review.rating, 0)})</div>
                                     </div>
                                 </div>
                                 <div className="list-rating mt-3">
@@ -607,9 +638,14 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                             <Icon.Star size={14} weight='fill' />
                                         </div>
                                         <div className="progress bg-line relative w-3/4 h-2">
-                                            <div className="progress-percent absolute bg-yellow w-[50%] h-full left-0 top-0"></div>
+                                            <div className={clsx("progress-percent absolute bg-yellow h-full left-0 top-0",
+                                            )}
+                                                style={{ width: `${(reviewsCount[5] / reviews.length) * 100}%` }}
+                                            ></div>
                                         </div>
-                                        <div className="caption1">50%</div>
+                                        <div className="caption1">
+                                            {(reviewsCount[5] / reviews.length) * 100} %
+                                        </div>
                                     </div>
                                     <div className="item flex items-center justify-between gap-1.5 mt-1">
                                         <div className="flex items-center gap-1">
@@ -617,9 +653,14 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                             <Icon.Star size={14} weight='fill' />
                                         </div>
                                         <div className="progress bg-line relative w-3/4 h-2">
-                                            <div className="progress-percent absolute bg-yellow w-[20%] h-full left-0 top-0"></div>
+                                            <div className={clsx("progress-percent absolute bg-yellow h-full left-0 top-0",
+                                            )}
+                                                style={{ width: `${(reviewsCount[4] / reviews.length) * 100}%` }}
+                                            ></div>
                                         </div>
-                                        <div className="caption1">20%</div>
+                                        <div className="caption1">
+                                            {(reviewsCount[4] / reviews.length) * 100} %
+                                        </div>
                                     </div>
                                     <div className="item flex items-center justify-between gap-1.5 mt-1">
                                         <div className="flex items-center gap-1">
@@ -627,9 +668,13 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                             <Icon.Star size={14} weight='fill' />
                                         </div>
                                         <div className="progress bg-line relative w-3/4 h-2">
-                                            <div className="progress-percent absolute bg-yellow w-[10%] h-full left-0 top-0"></div>
+                                            <div className="progress-percent absolute bg-yellow  h-full left-0 top-0"
+                                                style={{ width: `${(reviewsCount[3] / reviews.length) * 100}%` }}
+                                            ></div>
                                         </div>
-                                        <div className="caption1">10%</div>
+                                        <div className="caption1">
+                                            {(reviewsCount[3] / reviews.length) * 100} %
+                                        </div>
                                     </div>
                                     <div className="item flex items-center justify-between gap-1.5 mt-1">
                                         <div className="flex items-center gap-1">
@@ -637,9 +682,13 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                             <Icon.Star size={14} weight='fill' />
                                         </div>
                                         <div className="progress bg-line relative w-3/4 h-2">
-                                            <div className="progress-percent absolute bg-yellow w-[10%] h-full left-0 top-0"></div>
+                                            <div className={clsx("progress-percent absolute bg-yellow h-full left-0 top-0",
+                                            )}
+                                                style={{ width: `${(reviewsCount[2] / reviews.length) * 100}%` }}
+                                            >
+                                            </div>
                                         </div>
-                                        <div className="caption1">10%</div>
+                                        <div className="caption1">{(reviewsCount[2] / reviews.length) * 100} %</div>
                                     </div>
                                     <div className="item flex items-center justify-between gap-1.5 mt-1">
                                         <div className="flex items-center gap-2">
@@ -647,14 +696,20 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                             <Icon.Star size={14} weight='fill' />
                                         </div>
                                         <div className="progress bg-line relative w-3/4 h-2">
-                                            <div className="progress-percent absolute bg-yellow w-[10%] h-full left-0 top-0"></div>
+                                            <div className={clsx("progress-percent absolute bg-yellow h-full left-0 top-0",
+
+                                            )}
+                                                style={{ width: `${(reviewsCount[1] / reviews.length) * 100}%` }}
+                                            >
+
+                                            </div>
                                         </div>
-                                        <div className="caption1">10%</div>
+                                        <div className="caption1">{(reviewsCount[1] / reviews.length) * 100}%</div>
                                     </div>
                                 </div>
                             </div>
                             <div className="list-img lg:w-3/4 md:w-[70%] lg:pl-[15px] md:pl-[15px]">
-                                <div className="heading5">All Image (128)</div>
+                                <div className="heading5">All Image ({reviewImages.length || 0})</div>
                                 <div className="list md:mt-6 mt-3">
                                     <Swiper
                                         spaceBetween={16}
@@ -687,69 +742,19 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                                             },
                                         }}
                                     >
-                                        <SwiperSlide>
-                                            <Image
-                                                src={'/images/product/1000x1000.png'}
-                                                width={400}
-                                                height={400}
-                                                alt=''
-                                                className='w-[120px] aspect-square object-cover rounded-lg'
-                                            />
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <Image
-                                                src={'/images/product/1000x1000.png'}
-                                                width={400}
-                                                height={400}
-                                                alt=''
-                                                className='w-[120px] aspect-square object-cover rounded-lg'
-                                            />
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <Image
-                                                src={'/images/product/1000x1000.png'}
-                                                width={400}
-                                                height={400}
-                                                alt=''
-                                                className='w-[120px] aspect-square object-cover rounded-lg'
-                                            />
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <Image
-                                                src={'/images/product/1000x1000.png'}
-                                                width={400}
-                                                height={400}
-                                                alt=''
-                                                className='w-[120px] aspect-square object-cover rounded-lg'
-                                            />
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <Image
-                                                src={'/images/product/1000x1000.png'}
-                                                width={400}
-                                                height={400}
-                                                alt=''
-                                                className='w-[120px] aspect-square object-cover rounded-lg'
-                                            />
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <Image
-                                                src={'/images/product/1000x1000.png'}
-                                                width={400}
-                                                height={400}
-                                                alt=''
-                                                className='w-[120px] aspect-square object-cover rounded-lg'
-                                            />
-                                        </SwiperSlide>
-                                        <SwiperSlide>
-                                            <Image
-                                                src={'/images/product/1000x1000.png'}
-                                                width={400}
-                                                height={400}
-                                                alt=''
-                                                className='w-[120px] aspect-square object-cover rounded-lg'
-                                            />
-                                        </SwiperSlide>
+                                        {
+                                            reviewImages.map((item, index) => (
+                                                <SwiperSlide key={index}>
+                                                    <Image
+                                                        src={item}
+                                                        width={400}
+                                                        height={400}
+                                                        alt=''
+                                                        className='w-[120px] aspect-square object-cover rounded-lg'
+                                                    />
+                                                </SwiperSlide>
+                                            ))
+                                        }
                                     </Swiper>
                                 </div>
                                 <div className="sorting flex items-center flex-wrap md:gap-5 gap-3 gap-y-3 mt-6">
@@ -764,175 +769,42 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
                             </div>
                         </div>
                         <div className="list-review">
-                            <div className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
-                                <div className="left lg:w-1/4 w-full lg:pr-[15px]">
-                                    <div className="list-img-review flex gap-2">
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                    </div>
-                                    <div className="user mt-3">
-                                        <div className="text-title">Tony Nguyen</div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="text-secondary2">1 days ago</div>
-                                            <div className="text-secondary2">-</div>
-                                            <div className="text-secondary2"><span>Yellow</span> / <span>XL</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="right lg:w-3/4 w-full lg:pl-[15px]">
-                                    <Rate currentRate={5} size={16} />
-                                    <div className="heading5 mt-3">Unbeatable Style and Quality: A Fashion Brand That Delivers</div>
-                                    <div className="body1 mt-3">I can{String.raw`'t`} get enough of the fashion pieces from this brand. They have a great selection for every occasion and the prices are reasonable. The shipping is fast and the items always arrive in perfect condition.</div>
-                                    <div className="action mt-3">
-                                        <div className="flex items-center gap-4">
-                                            <div className="like-btn flex items-center gap-1 cursor-pointer">
-                                                <Icon.HandsClapping size={18} />
-                                                <div className="text-button">20</div>
+                            {
+                                reviews.map((item, index) => (
+                                    <div className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
+                                        <div className="left lg:w-1/4 w-full lg:pr-[15px]">
+                                            <div className="list-img-review flex gap-2">
+                                                {
+                                                    item.images.map((img, index) => (
+                                                        <Image
+                                                            src={img}
+                                                            width={200}
+                                                            height={200}
+                                                            alt='img'
+                                                            className='w-[60px] aspect-square rounded-lg'
+                                                            key={index}
+                                                        />
+                                                    ))
+                                                }
                                             </div>
-                                            <Link href={'#form-review'} className="reply-btn text-button text-secondary cursor-pointer hover:text-black">Reply</Link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
-                                <div className="left lg:w-1/4 w-full lg:pr-[15px]">
-                                    <div className="list-img-review flex gap-2">
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                    </div>
-                                    <div className="user mt-3">
-                                        <div className="text-title">Tony Nguyen</div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="text-secondary2">1 days ago</div>
-                                            <div className="text-secondary2">-</div>
-                                            <div className="text-secondary2"><span>Yellow</span> / <span>XL</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="right lg:w-3/4 w-full lg:pl-[15px]">
-                                    <Rate currentRate={5} size={16} />
-                                    <div className="heading5 mt-3">Exceptional Fashion: The Perfect Blend of Style and Durability</div>
-                                    <div className="body1 mt-3">The fashion brand{String.raw`'s`} online shopping experience is seamless. The website is user-friendly, the product images are clear, and the checkout process is quick.</div>
-                                    <div className="action mt-3">
-                                        <div className="flex items-center gap-4">
-                                            <div className="like-btn flex items-center gap-1 cursor-pointer">
-                                                <Icon.HandsClapping size={18} />
-                                                <div className="text-button">20</div>
+                                            <div className="user mt-3">
+                                                {/* <div className="text-title">Tony Nguyen</div> */}
+                                                <div className="flex items-center gap-2">
+                                                    <div className="text-secondary2">{}</div>
+                                                    <div className="text-secondary2">{formatDate(item.createdAt)}</div>
+                                                    {/* <div className="text-secondary2"><span>Yellow</span> / <span>XL</span></div> */}
+                                                </div>
                                             </div>
-                                            <Link href={'#form-review'} className="reply-btn text-button text-secondary cursor-pointer hover:text-black">Reply</Link>
+                                        </div>
+                                        <div className="right lg:w-3/4 w-full lg:pl-[15px]">
+                                            <Rate currentRate={item.rating} size={16} />
+                                            {/* <div className="heading5 mt-3">{item.comment}</div> */}
+                                            <div className="body1 mt-3">{item.comment}</div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="item flex max-lg:flex-col gap-y-4 w-full py-6 border-t border-line">
-                                <div className="left lg:w-1/4 w-full lg:pr-[15px]">
-                                    <div className="list-img-review flex gap-2">
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                        <Image
-                                            src={'/images/product/1000x1000.png'}
-                                            width={200}
-                                            height={200}
-                                            alt='img'
-                                            className='w-[60px] aspect-square rounded-lg'
-                                        />
-                                    </div>
-                                    <div className="user mt-3">
-                                        <div className="text-title">Tony Nguyen</div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="text-secondary2">1 days ago</div>
-                                            <div className="text-secondary2">-</div>
-                                            <div className="text-secondary2"><span>Yellow</span> / <span>XL</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="right lg:w-3/4 w-full lg:pl-[15px]">
-                                    <Rate currentRate={5} size={16} />
-                                    <div className="heading5 mt-3">Elevate Your Wardrobe: Stunning Dresses That Make a Statement</div>
-                                    <div className="body1 mt-3">I love how sustainable and ethically conscious this fashion brand is. They prioritize eco-friendly materials and fair trade practices, which makes me feel good about supporting them.</div>
-                                    <div className="action mt-3">
-                                        <div className="flex items-center gap-4">
-                                            <div className="like-btn flex items-center gap-1 cursor-pointer">
-                                                <Icon.HandsClapping size={18} />
-                                                <div className="text-button">20</div>
-                                            </div>
-                                            <Link href={'#form-review'} className="reply-btn text-button text-secondary cursor-pointer hover:text-black">Reply</Link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="text-button more-review-btn text-center mt-2 underline">View More Comments</div>
-                        </div>
-                        <div id="form-review" className='form-review pt-6'>
-                            <div className="heading4">Leave A comment</div>
-                            <form className="grid sm:grid-cols-2 gap-4 gap-y-5 mt-6">
-                                <div className="name ">
-                                    <input className="border-line px-4 pt-3 pb-3 w-full rounded-lg" id="username" type="text" placeholder="Your Name *" required />
-                                </div>
-                                <div className="mail ">
-                                    <input className="border-line px-4 pt-3 pb-3 w-full rounded-lg" id="email" type="email" placeholder="Your Email *" required />
-                                </div>
-                                <div className="col-span-full message">
-                                    <textarea className="border border-line px-4 py-3 w-full rounded-lg" id="message" name="message" placeholder="Your message *" required></textarea>
-                                </div>
-                                <div className="col-span-full flex items-start -mt-2 gap-2">
-                                    <input type="checkbox" id="saveAccount" name="saveAccount" className='mt-1.5' />
-                                    <label className="" htmlFor="saveAccount">Save my name, email, and website in this browser for the next time I comment.</label>
-                                </div>
-                                <div className="col-span-full sm:pt-3">
-                                    <button className='button-main bg-white text-black border border-black'>Submit Reviews</button>
-                                </div>
-                            </form>
+                                ))
+                            }
+
                         </div>
                     </div>
                 </div>
@@ -941,4 +813,4 @@ const Default: React.FC<Props> = ({ productMain, productId }) => {
     )
 }
 
-export default Default
+export default Default;
