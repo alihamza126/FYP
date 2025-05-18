@@ -57,7 +57,7 @@ const TestimonialItem: React.FC<TestimonialProps> = ({ data, type }) => {
                                                     <div className="heading flex items-center gap-4">
                                                         <div className="avatar w-10 h-10 rounded-full overflow-hidden">
                                                             <Image
-                                                                src={data.avatar}
+                                                                src={data.user.image}
                                                                 width={500}
                                                                 height={500}
                                                                 alt='avatar'
@@ -65,11 +65,11 @@ const TestimonialItem: React.FC<TestimonialProps> = ({ data, type }) => {
                                                             />
                                                         </div>
                                                         <div className="infor">
-                                                            <Rate currentRate={data.star} size={14} />
-                                                            <div className="text-title name">{data.name}</div>
+                                                            <Rate currentRate={data.rating} size={14} />
+                                                            <div className="text-title name">{data.user.username}</div>
                                                         </div>
                                                     </div>
-                                                    <div className="body1 desc mt-4">{data.description}</div>
+                                                    <div className="body1 desc mt-4">{data.comment}</div>
                                                 </div>
                                             </div>
                                         </>

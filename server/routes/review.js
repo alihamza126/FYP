@@ -7,9 +7,27 @@ import Product from '../models/product.js';
 
 
 const reviewRouter = express.Router();
+
+
+reviewRouter.get('/', async (req, res) => {
+    try {
+        const reviews = await Review
+            .find()                         // all reviews
+            .sort('-createdAt')             // newest first
+            .populate({                     // only username & image from User
+                path: 'user',
+                select: 'username image'
+            }).select('order rating comment createdAt');
+
+        return res.status(200).json({ reviews });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+
 reviewRouter.use(authenticateUser);
-
-
 
 reviewRouter.post('/:orderId', async (req, res) => {
     try {
@@ -107,6 +125,9 @@ reviewRouter.get('/:orderId', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+
+
 
 
 export default reviewRouter;

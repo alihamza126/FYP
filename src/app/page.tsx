@@ -19,13 +19,16 @@ export default async function Home() {
     let categoryData = [];
     let trendingNowData = [];
     let slidesData = [];
+    let testimonialData = [];
     try {
         const catRes = await Axios.get('/api/v1/category');
         const trendRes = await Axios.get('/api/v1/product');
         const slideRes = await Axios.get('/api/v1/slider');
+        const testRes = await Axios.get('/api/v1/review');
         slidesData = slideRes.data.sliders;
         categoryData = catRes.data.categories;
         trendingNowData = trendRes.data.products;
+        testimonialData = testRes.data.reviews;
     } catch (error) {
 
     }
@@ -36,12 +39,12 @@ export default async function Home() {
             <div id="header" className='relative w-full'>
                 <MenuTwo />
                 <BannerTop props="bg-black py-3" textColor='text-white' bgLine='bg-white' />
-                <SliderOne  slidesData={slidesData}/>
+                <SliderOne slidesData={slidesData} />
             </div>
             <TrendingNow categoryData={categoryData} />
             <Deal data={trendingNowData} start={0} limit={4} />
             <TrendingProduct data={trendingNowData} start={0} limit={18} />
-            <FlashSale />
+            {/* <FlashSale /> */}
 
             <Testimonial data={testimonialData} limit={5} />
             <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-3xl" />
