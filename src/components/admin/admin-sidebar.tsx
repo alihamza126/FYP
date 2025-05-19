@@ -14,6 +14,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar"
 import { Chat } from "@phosphor-icons/react/dist/ssr"
+import { signOut } from "next-auth/react"
 
 export function AdminSidebar() {
   const pathname = usePathname()
@@ -28,10 +29,10 @@ export function AdminSidebar() {
   }
 
   const handleLogout = () => {
-    // Clear admin token
-    document.cookie = "admin_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-    // Redirect to login
-    window.location.href = "/admin/login"
+      signOut({
+        callbackUrl: "/login",
+      })
+      closeSidebar()
   }
 
   const navItems = [
