@@ -11,5 +11,5 @@
       "resolveJsonModule": true, // Allow importing JSON files
       "esModuleInterop": true    // Enable ES module interop
     },
-    "include": ["server.js"] // Include JSON file
+    "include": ["server.mjs"] // Include JSON file
   }
