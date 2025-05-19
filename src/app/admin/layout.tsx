@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { ChatProvider } from "@/context/AdminChat"
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
@@ -19,7 +20,9 @@ export default function AdminLayout({
       <AdminSidebar />
       <main className="w-full px-4">
         <SidebarTrigger />
-        {children}
+        <ChatProvider>
+          {children}
+        </ChatProvider>
       </main>
     </SidebarProvider>
   )

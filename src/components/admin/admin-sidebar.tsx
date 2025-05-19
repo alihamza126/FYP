@@ -13,6 +13,7 @@ import {
   SidebarGroup,
   SidebarHeader,
 } from "@/components/ui/sidebar"
+import { Chat } from "@phosphor-icons/react/dist/ssr"
 
 export function AdminSidebar() {
   const pathname = usePathname()
@@ -111,6 +112,18 @@ export function AdminSidebar() {
 
           </div>
         </SidebarGroup>
+        <SidebarGroup>
+          <div className="px-4 pt-5 border-t ">
+            <Link
+              href="/admin/chat"
+              className=" flex text-xl justify-start items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted"
+            >
+              <Chat className="mr-2 w-5 " />
+              Chat
+            </Link>
+          </div>
+        </SidebarGroup>
+
         <SidebarGroup>
           <div className="p-4 border-t">
             <Button

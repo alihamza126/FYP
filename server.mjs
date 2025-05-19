@@ -16,6 +16,8 @@ import sliderRouter from './server/routes/slider.js';
 import paymentRouter from './server/routes/payment.js';
 import ordersRouter from './server/routes/orders.js';
 import reviewRouter from './server/routes/review.js';
+import setupSocket from './server/socket/Socket.js';
+import messageRouter from './server/routes/Message.js';
 dotenv.config({
   path: "./.env.local",
 }); // 👈 
@@ -59,7 +61,8 @@ app.prepare().then(() => {
   expressApp.use("/api/v1/product", productRouter);
   expressApp.use("/api/v1/slider", sliderRouter);
   expressApp.use("/api/v1/orders", ordersRouter);
-  expressApp.use("/api/v1/review",reviewRouter);
+  expressApp.use("/api/v1/review", reviewRouter);
+  expressApp.use('/api/v1/messages', messageRouter);
 
 
 
@@ -75,10 +78,12 @@ app.prepare().then(() => {
   // error handler middleware
   // expressApp.use(errorHandler);
 
+  const httpServer = createServer(expressApp);
+  setupSocket(httpServer);
 
 
 
-  createServer(expressApp).listen(port, () => {
+  httpServer.listen(port, () => {
     console.log(
       `> Server listening at http://localhost:${port} as ${dev ? 'development' : process.env.NODE_ENV
       }`
