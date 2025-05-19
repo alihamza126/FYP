@@ -33,7 +33,6 @@ export default function AdminChat() {
   }, [messages, selectedUser]);
 
   useEffect(() => {
-    console.log(messages)
     const res = selectedUser
       ? messages.filter(
         (m) =>

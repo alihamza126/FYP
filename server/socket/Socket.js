@@ -64,8 +64,12 @@ const setupSocket = (server) => {
 
             try {
                 const msg = await Message.create({ senderId: sender, text });
-                // emit back to sender
-                socket.emit('receive-message', msg);
+                adminUsers.forEach((admin) => {
+                    io.to(admin.socketId).emit('receive-message', msg);
+                });
+                
+
+                // socket.emit('receive-message', msg);
             } catch (err) {
                 console.error('Failed to save message:', err);
             }
@@ -89,7 +93,7 @@ const setupSocket = (server) => {
                     io.to(receiverSocket.socketId).emit('receive-message', msg);
                 }
                 // emit back to sender
-                // socket.emit('receive-message', msg);
+                socket.emit('receive-message', msg);
             } catch (err) {
                 console.error('Failed to save message:', err);
             }
