@@ -12,6 +12,7 @@ import CountdownTimeType from '@/type/CountdownType'
 import { countdownTime } from '@/store/countdownTime'
 import { Toaster } from 'react-hot-toast'
 import { HeroUIProvider } from "@heroui/react";
+import ChatWidgetLoader from '@/components/chat/chatLoader'
 
 const serverTimeLeft: CountdownTimeType = countdownTime();
 
@@ -27,10 +28,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  
+
   return (
     <GlobalProvider>
       <html lang="en">
         <HeroUIProvider>
+        <ChatWidgetLoader />
           <Toaster />
           <body className={instrument.className}>
             {children}

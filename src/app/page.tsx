@@ -15,6 +15,7 @@ import Axios from '@/lib/Axios'
 
 
 
+
 export default async function Home() {
     let categoryData = [];
     let trendingNowData = [];
@@ -35,6 +36,7 @@ export default async function Home() {
 
     return (
         <>
+            
             <TopNavThree props="style-three bg-white" />
             <div id="header" className='relative w-full'>
                 <MenuTwo categoryData={categoryData} />
