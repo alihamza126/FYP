@@ -18,7 +18,7 @@ const CustomerFeedbacks = () => {
             <div className='customer-feedbacks md:py-20 py-10'>
                 <div className="container">
                     <div className="list-review grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 md:gap-[30px] gap-5">
-                        {reviewData.map(item => (
+                        {reviewData && reviewData?.map(item => (
                             <TestimonialItem key={item.id} data={item} type='style-one' />
                         ))}
                     </div>

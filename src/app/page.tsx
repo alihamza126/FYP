@@ -31,12 +31,12 @@ export default async function Home() {
         trendingNowData = trendRes.data.products;
         testimonialData = testRes.data.reviews;
     } catch (error) {
-
+        testimonialData = [];
     }
 
     return (
         <>
-            
+
             <TopNavThree props="style-three bg-white" />
             <div id="header" className='relative w-full'>
                 <MenuTwo categoryData={categoryData} />

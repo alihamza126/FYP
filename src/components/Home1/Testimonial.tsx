@@ -13,6 +13,7 @@ interface Props {
 }
 
 const Testimonial: React.FC<Props> = ({ data, limit }) => {
+    console.log(data)
     return (
         <>
             <div className="testimonial-block mt-5 md:py-20 py-14 bg-surface">
@@ -39,7 +40,7 @@ const Testimonial: React.FC<Props> = ({ data, limit }) => {
                                 },
                             }}
                         >
-                            {data.map((prd, index) => (
+                            {data && data?.map((prd, index) => (
                                 <SwiperSlide key={index}>
                                     <TestimonialItem data={prd} type='style-seven' />
                                 </SwiperSlide>
