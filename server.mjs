@@ -18,6 +18,7 @@ import ordersRouter from './server/routes/orders.js';
 import reviewRouter from './server/routes/review.js';
 import setupSocket from './server/socket/Socket.js';
 import messageRouter from './server/routes/Message.js';
+import aiRouter from './server/routes/ai.js';
 dotenv.config({
   path: "./.env.local",
 }); // 👈 
@@ -63,6 +64,8 @@ app.prepare().then(() => {
   expressApp.use("/api/v1/orders", ordersRouter);
   expressApp.use("/api/v1/review", reviewRouter);
   expressApp.use('/api/v1/messages', messageRouter);
+
+  expressApp.use('/api/v1/ai', aiRouter);
 
 
 
